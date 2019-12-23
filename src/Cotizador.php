@@ -2,6 +2,7 @@
 namespace Cotizador;
 
 use Carbon\Carbon;
+use Tramasec\Util\EvalMath\EvalMath;
 
 class Cotizador extends CotizadorInverso
 {
@@ -9,6 +10,28 @@ class Cotizador extends CotizadorInverso
      * @var \DateTime
      */
     protected $inicio_vigencia;
+
+    /**
+     * @var array
+     */
+    protected $formulas = [];
+
+    /**
+     * @return array
+     */
+    public function getFormulas()
+    {
+        return $this->formulas;
+    }
+
+    /**
+     * @param array $formulas
+     */
+    public function setFormulas($formulas)
+    {
+
+        $this->formulas = $formulas;
+    }
 
     /**
      * @return \DateTime
@@ -84,14 +107,6 @@ class Cotizador extends CotizadorInverso
     public function getPrimaNeta()
     {
         return $this->prima_neta;
-    }
-
-    /**
-     * @param float $prima_neta
-     */
-    public function setPrimaNeta(float $prima_neta)
-    {
-        $this->prima_neta = $prima_neta;
     }
 
     /**
@@ -177,14 +192,6 @@ class Cotizador extends CotizadorInverso
     }
 
     /**
-     * @param float $prima_neta_sin_valores_extra
-     */
-    public function setPrimaNetaSinValoresExtra($prima_neta_sin_valores_extra)
-    {
-        $this->prima_neta_sin_valores_extra = $prima_neta_sin_valores_extra;
-    }
-
-    /**
      * @var float
      */
     protected $prima_neta;
@@ -192,12 +199,12 @@ class Cotizador extends CotizadorInverso
     /**
      * @var float
      */
-    protected $prima_total;
+    protected $prima_total = 0;
 
     /**
      * @var float
      */
-    protected $prima_riesgo;
+    protected $prima_riesgo = 0;
 
     /**
      * @return float
@@ -418,11 +425,39 @@ class Cotizador extends CotizadorInverso
         $this->prima_neta = $prima_diaria * $this->dias_vigencia;
     }
 
+    public function ejecutarFormulas(){
+
+        $formulas = new EvalMath();
+
+        $append = [
+            "prima_riesgo = 0+".$this->prima_riesgo
+        ];
+        //$this->formulas = array_merge($append,$formulas);
+
+        $form = array_merge($append, $this->getFormulas());
+
+        foreach ( $form as $formula){
+
+            $formulas->evaluate($formula);
+        }
+
+        $this->formulas_calculadas = $formulas->vars();
+
+        foreach ($this->formulas_calculadas as $key => $value){
+
+            if($key == 'prima_neta') {
+                $this->$key = $value;
+                $this->prima_neta_sin_valores_extra = $value;
+            }
+        }
+    }
+
     public function cotizarPrimaDiaria(int $dias) {
         $this->calcularValorAseguradoValoresExtras();
         $this->calcularPrimaNeta();
         $this->calcularPrimaNetaDiaria($dias);
         $this->calcularPrimaNetaValoresExtras();
+        $this->ejecutarFormulas();
 
         $this->calcularImpuestosPrimaNeta();
         $this->calcularBaseImponible();
@@ -434,10 +469,12 @@ class Cotizador extends CotizadorInverso
      * Realiza todos los cálculos pera generar el cotizador
      */
     public function cotizar() {
+        $this->calcularCoberturas();
         $this->calcularValorAseguradoValoresExtras();
         $this->calcularPrimaNeta();
-        $this->calcularCoberturas();
+        $this->ejecutarFormulas();
         $this->calcularPrimaNetaValoresExtras();
+
 
         $this->calcularImpuestosPrimaNeta();
         $this->calcularBaseImponible();
