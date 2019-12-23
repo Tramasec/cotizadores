@@ -225,4 +225,46 @@ class CasoUnoTest extends TestCase
         $this->assertEquals(9.98, $a->getPrimaTotal());
 
     }
+
+    public function testCoberturas()
+    {
+
+        $a = new \Cotizador\Cotizador();
+        $date = \Carbon\Carbon::now();
+        $a->setInicioVigencia($date);
+        $a->setFinVigencia($date->clone()->addMonth());
+        $cobertura1 = new stdClass();
+        $cobertura1->nombre = 'incendio';
+        $cobertura1->maximo_asegurado = 20000;
+        $cobertura1->porcentaje = 0.015;
+        $a->agregarCoberturas(1, $cobertura1);
+        $cobertura2 = new stdClass();
+        $cobertura2->nombre = 'robo';
+        $cobertura2->maximo_asegurado = 6000;
+        $cobertura2->porcentaje = 0.075;
+        $a->agregarCoberturas(2, $cobertura2);
+        $cobertura3 = new stdClass();
+        $cobertura3->nombre = 'robo equipo electronico';
+        $cobertura3->maximo_asegurado = 2000;
+        $cobertura3->porcentaje = 0.0;
+        $a->agregarCoberturas(3, $cobertura3);
+        $cobertura4 = new stdClass();
+        $cobertura4->nombre = 'responsabilidad civil';
+        $cobertura4->maximo_asegurado = 2000;
+        $cobertura4->porcentaje = 0.0666666666666667;
+        $a->agregarCoberturas(4, $cobertura4);
+        $a->agregarImpuesto(12, 12.0);
+        $a->agregarImpuestoPrimaNeta(35, 3.5);
+        $a->agregarImpuestoPrimaNeta(5, 0.5);
+        $a->setPrimaTotal(19.983);
+        $a->setValorAsegurado(15000);
+        $a->setDerechosEmision(1.05);
+        $a->cotizadorInverso();
+        $a->cotizar();
+
+        $this->assertEquals(16.1461195054945, $a->getPrimaNeta());
+        $this->assertEquals(19.98, $a->getPrimaTotal());
+        $this->assertEquals(17.84196428571428, $a->getBaseImponible());
+        $this->assertEquals(8.833333333333334, $a->getPrimaRiesgo());
+    }
 }

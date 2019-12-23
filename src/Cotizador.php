@@ -164,6 +164,11 @@ class Cotizador extends CotizadorInverso
     protected $tasa;
 
     /**
+     * @var float
+     */
+    protected $prima_neta_sin_valores_extra;
+
+    /**
      * @return float
      */
     public function getPrimaNetaSinValoresExtra()
@@ -172,9 +177,12 @@ class Cotizador extends CotizadorInverso
     }
 
     /**
-     * @var float
+     * @param float $prima_neta_sin_valores_extra
      */
-    protected $prima_neta_sin_valores_extra;
+    public function setPrimaNetaSinValoresExtra($prima_neta_sin_valores_extra)
+    {
+        $this->prima_neta_sin_valores_extra = $prima_neta_sin_valores_extra;
+    }
 
     /**
      * @var float
@@ -185,6 +193,27 @@ class Cotizador extends CotizadorInverso
      * @var float
      */
     protected $prima_total;
+
+    /**
+     * @var float
+     */
+    protected $prima_riesgo;
+
+    /**
+     * @return float
+     */
+    public function getPrimaRiesgo()
+    {
+        return $this->prima_riesgo;
+    }
+
+    /**
+     * @param float $prima_riesgo
+     */
+    public function setPrimaRiesgo($prima_riesgo)
+    {
+        $this->prima_riesgo = $prima_riesgo;
+    }
 
     /**
      * @var float
@@ -253,59 +282,89 @@ class Cotizador extends CotizadorInverso
      */
     protected $valoresExtrasValorAsegurado = [];
 
-    public function agregarValoresExtrasValorAsegurado(string $detalle, float $valor)
-    {
+    /**
+     * @var array
+     * Valores de coberturas del cotizador ej [1, 'incendio' => [1000, 2]]
+     */
+    protected $coberturas = [];
+
+    public function agregarCoberturas(int $id, object $valor) {
+        $coberturas = $this->coberturas;
+        $coberturas[$id] = $valor;
+
+        $this->coberturas = $coberturas;
+    }
+
+    public function calcularCoberturas() {
+
+        foreach ($this->coberturas as $key => $value){
+            $value->prima_calculada  = $value->maximo_asegurado * ($value->porcentaje/100);
+        }
+
+        $this->calcularCoberturasPrimaNeta();
+    }
+
+    public function calcularCoberturasPrimaNeta() {
+
+        $total = 0;
+        foreach ($this->coberturas as $key => $value){
+            $total = $total + $value->prima_calculada;
+        }
+
+        $this->prima_riesgo = $total;
+    }
+
+    public function agregarValoresExtrasValorAsegurado(string $detalle, float $valor) {
         $valoresExtrasValorAsegurado = $this->valoresExtrasValorAsegurado;
         $valoresExtrasValorAsegurado[$detalle] = $valor;
 
         $this->valoresExtrasValorAsegurado = $valoresExtrasValorAsegurado;
     }
 
-    public function calcularValorAseguradoValoresExtras()
-    {
+    public function calcularValorAseguradoValoresExtras() {
+
         $this->valor_asegurado_sin_valores_extra = $this->valor_asegurado;
         $total = 0;
-        foreach ($this->valoresExtrasValorAsegurado as $key => $value) {
+        foreach ($this->valoresExtrasValorAsegurado as $key => $value){
             $total = $total + $value;
         }
 
         $this->valor_asegurado = $this->valor_asegurado + $total;
     }
 
-    public function calcularPrimaNeta()
-    {
+    public function calcularPrimaNeta() {
+
         $this->prima_neta = $this->valor_asegurado * ($this->tasa /100);
         $this->prima_neta_sin_valores_extra = $this->prima_neta;
+
     }
 
-    public function agregarValoresExtrasPrima(string $detalle, float $valor)
-    {
+    public function agregarValoresExtrasPrima(string $detalle, float $valor) {
         $valoresExtrasPrima = $this->valoresExtrasPrima;
         $valoresExtrasPrima[$detalle] = $valor;
 
         $this->valoresExtrasPrima = $valoresExtrasPrima;
     }
 
-    public function calcularPrimaNetaValoresExtras()
-    {
+    public function calcularPrimaNetaValoresExtras() {
+
         $total = 0;
-        foreach ($this->valoresExtrasPrima as $key => $value) {
+        foreach ($this->valoresExtrasPrima as $key => $value){
             $total = $total + $value;
         }
 
         $this->prima_neta = $this->prima_neta + $total;
     }
 
-    public function agregarImpuestoPrimaNeta(int $id, float $porcentaje)
-    {
+    public function agregarImpuestoPrimaNeta(int $id, float $porcentaje) {
         $impuestosPrimaNeta = $this->impuestosPrimaNeta;
         $impuestosPrimaNeta[$id] = $porcentaje;
 
         $this->impuestosPrimaNeta = $impuestosPrimaNeta;
     }
 
-    public function calcularImpuestosPrimaNeta()
-    {
+    public function calcularImpuestosPrimaNeta() {
+
         $impuestosCalculados = [];
 
         foreach ($this->impuestosPrimaNeta as $key => $impuesto) {
@@ -315,8 +374,8 @@ class Cotizador extends CotizadorInverso
         $this->impuestosCalculadosPrimaNeta = $impuestosCalculados;
     }
 
-    public function calcularBaseImponible()
-    {
+    public function calcularBaseImponible() {
+
         $total = 0;
         foreach ($this->impuestosCalculadosPrimaNeta as $key => $value) {
             $total = $total + $value;
@@ -325,16 +384,15 @@ class Cotizador extends CotizadorInverso
         $this->base_imponible = $this->prima_neta + $total + $this->derechos_emision;
     }
 
-    public function agregarImpuesto(int $id, float $porcentaje)
-    {
+    public function agregarImpuesto(int $id, float $porcentaje) {
         $impuestos = $this->impuestos;
         $impuestos[$id] = $porcentaje;
 
         $this->impuestos = $impuestos;
     }
 
-    public function calcularImpuestos()
-    {
+    public function calcularImpuestos() {
+
         $impuestosCalculados = [];
 
         foreach ($this->impuestos as $key => $impuesto) {
@@ -344,8 +402,8 @@ class Cotizador extends CotizadorInverso
         $this->impuestosCalculados = $impuestosCalculados;
     }
 
-    public function calcularPrimaTotal()
-    {
+    public function calcularPrimaTotal() {
+
         $total = 0;
         foreach ($this->impuestosCalculados as $key => $value) {
             $total = $total + $value;
@@ -354,19 +412,18 @@ class Cotizador extends CotizadorInverso
         $this->prima_total = round($this->base_imponible + $total, 2);
     }
 
-    public function calcularPrimaNetaDiaria(int $dias)
-    {
+    public function calcularPrimaNetaDiaria(int $dias){
         $prima_diaria = $this->prima_neta / $dias;
 
         $this->prima_neta = $prima_diaria * $this->dias_vigencia;
     }
 
-    public function cotizarPrimaDiaria(int $dias)
-    {
+    public function cotizarPrimaDiaria(int $dias) {
         $this->calcularValorAseguradoValoresExtras();
         $this->calcularPrimaNeta();
         $this->calcularPrimaNetaDiaria($dias);
         $this->calcularPrimaNetaValoresExtras();
+
         $this->calcularImpuestosPrimaNeta();
         $this->calcularBaseImponible();
         $this->calcularImpuestos();
@@ -376,10 +433,10 @@ class Cotizador extends CotizadorInverso
     /**
      * Realiza todos los cálculos pera generar el cotizador
      */
-    public function cotizar()
-    {
+    public function cotizar() {
         $this->calcularValorAseguradoValoresExtras();
         $this->calcularPrimaNeta();
+        $this->calcularCoberturas();
         $this->calcularPrimaNetaValoresExtras();
 
         $this->calcularImpuestosPrimaNeta();
@@ -387,4 +444,5 @@ class Cotizador extends CotizadorInverso
         $this->calcularImpuestos();
         $this->calcularPrimaTotal();
     }
+
 }
