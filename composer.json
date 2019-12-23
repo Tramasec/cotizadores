@@ -1,0 +1,30 @@
+{
+    "name": "tramasec/cotizador",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Victor Sandoval",
+            "email": "vsandoval@tramasec.com"
+        }
+    ],
+    "require": {
+        "tramasec/eval-math": "^2.6",
+        "nesbot/carbon": "^2.28"
+    },
+    "autoload": {
+      "psr-4": {
+        "Cotizador\\": "src/"
+      }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^5.0",
+        "phpunit/phpunit": "^8.5",
+        "phpunit/php-code-coverage": "^7.0"
+    }
+}
