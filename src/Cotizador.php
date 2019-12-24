@@ -17,60 +17,6 @@ class Cotizador extends CotizadorInverso
     protected $formulas = [];
 
     /**
-     * @return array
-     */
-    public function getFormulas()
-    {
-        return $this->formulas;
-    }
-
-    /**
-     * @param array $formulas
-     */
-    public function setFormulas($formulas)
-    {
-
-        $this->formulas = $formulas;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getInicioVigencia()
-    {
-        return $this->inicio_vigencia;
-    }
-
-    /**
-     * @param \DateTime $inicio_vigencia
-     */
-    public function setInicioVigencia(Carbon $inicio_vigencia)
-    {
-        $this->inicio_vigencia = $inicio_vigencia;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getFinVigencia()
-    {
-        return $this->fin_vigencia;
-    }
-
-    /**
-     * @param \DateTime $fin_vigencia
-     */
-    public function setFinVigencia(Carbon $fin_vigencia)
-    {
-        $this->fin_vigencia = $fin_vigencia;
-
-        $inicio_vigencia = Carbon::parse($this->inicio_vigencia);
-        $fin_vigencia = Carbon::parse($this->fin_vigencia);
-
-        $this->dias_vigencia = $fin_vigencia->diffInDays($inicio_vigencia);
-    }
-
-    /**
      * @var \DateTime
      */
     protected $fin_vigencia;
@@ -86,94 +32,6 @@ class Cotizador extends CotizadorInverso
     protected $valor_asegurado_sin_valores_extra;
 
     /**
-     * @return float
-     */
-    public function getValorAseguradoSinValoresExtra()
-    {
-        return $this->valor_asegurado_sin_valores_extra;
-    }
-
-    /**
-     * @param float $valor_asegurado_sin_valores_extra
-     */
-    public function setValorAseguradoSinValoresExtra($valor_asegurado_sin_valores_extra)
-    {
-        $this->valor_asegurado_sin_valores_extra = $valor_asegurado_sin_valores_extra;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrimaNeta()
-    {
-        return $this->prima_neta;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPrimaTotal()
-    {
-        return $this->prima_total;
-    }
-
-    /**
-     * @param float $prima_total
-     */
-    public function setPrimaTotal(float $prima_total)
-    {
-        $this->prima_total = $prima_total;
-    }
-
-    /**
-     * @return float
-     */
-    public function getBaseImponible()
-    {
-        return $this->base_imponible;
-    }
-
-    /**
-     * @param float $base_imponible
-     */
-    public function setBaseImponible(float $base_imponible)
-    {
-        $this->base_imponible = $base_imponible;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDiasVigencia()
-    {
-        return $this->dias_vigencia;
-    }
-
-    /**
-     * @param int $dias_vigencia
-     */
-    public function setDiasVigencia(int $dias_vigencia)
-    {
-        $this->dias_vigencia = $dias_vigencia;
-    }
-
-    /**
-     * @param float $valor_asegurado
-     */
-    public function setValorAsegurado(float $valor_asegurado)
-    {
-        $this->valor_asegurado = $valor_asegurado;
-    }
-
-    /**
-     * @param float
-     */
-    public function setTasa(float $tasa)
-    {
-        $this->tasa = $tasa;
-    }
-
-    /**
      * @var float
      */
     protected $tasa;
@@ -182,14 +40,6 @@ class Cotizador extends CotizadorInverso
      * @var float
      */
     protected $prima_neta_sin_valores_extra;
-
-    /**
-     * @return float
-     */
-    public function getPrimaNetaSinValoresExtra()
-    {
-        return $this->prima_neta_sin_valores_extra;
-    }
 
     /**
      * @var float
@@ -207,22 +57,6 @@ class Cotizador extends CotizadorInverso
     protected $prima_riesgo = 0;
 
     /**
-     * @return float
-     */
-    public function getPrimaRiesgo()
-    {
-        return $this->prima_riesgo;
-    }
-
-    /**
-     * @param float $prima_riesgo
-     */
-    public function setPrimaRiesgo($prima_riesgo)
-    {
-        $this->prima_riesgo = $prima_riesgo;
-    }
-
-    /**
      * @var float
      */
     protected $base_imponible;
@@ -236,22 +70,6 @@ class Cotizador extends CotizadorInverso
      * @var float
      */
     protected $derechos_emision = 0;
-
-    /**
-     * @return float
-     */
-    public function getDerechosEmision()
-    {
-        return $this->derechos_emision;
-    }
-
-    /**
-     * @param float $derechos_emision
-     */
-    public function setDerechosEmision($derechos_emision)
-    {
-        $this->derechos_emision = $derechos_emision;
-    }
 
     /**
      * @var array
@@ -294,6 +112,147 @@ class Cotizador extends CotizadorInverso
      * Valores de coberturas del cotizador ej [1, 'incendio' => [1000, 2]]
      */
     protected $coberturas = [];
+
+    /**
+     * @return array
+     */
+    public function getFormulas()
+    {
+        return $this->formulas;
+    }
+
+    /**
+     * @param array $formulas
+     */
+    public function setFormulas($formulas)
+    {
+        $this->formulas = $formulas;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getInicioVigencia()
+    {
+        return $this->inicio_vigencia;
+    }
+
+    /**
+     * @param \DateTime $inicio_vigencia
+     */
+    public function setInicioVigencia(Carbon $inicio_vigencia)
+    {
+        $this->inicio_vigencia = $inicio_vigencia;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFinVigencia()
+    {
+        return $this->fin_vigencia;
+    }
+
+    /**
+     * @param \DateTime $fin_vigencia
+     */
+    public function setFinVigencia(Carbon $fin_vigencia)
+    {
+        $this->fin_vigencia = $fin_vigencia;
+
+        $inicio_vigencia = Carbon::parse($this->inicio_vigencia);
+        $fin_vigencia = Carbon::parse($this->fin_vigencia);
+
+        $this->dias_vigencia = $fin_vigencia->diffInDays($inicio_vigencia);
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrimaNeta()
+    {
+        return $this->prima_neta;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrimaTotal()
+    {
+        return $this->prima_total;
+    }
+
+    /**
+     * @param float $prima_total
+     */
+    public function setPrimaTotal(float $prima_total)
+    {
+        $this->prima_total = $prima_total;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBaseImponible()
+    {
+        return $this->base_imponible;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDiasVigencia()
+    {
+        return $this->dias_vigencia;
+    }
+
+    /**
+     * @param float $valor_asegurado
+     */
+    public function setValorAsegurado(float $valor_asegurado)
+    {
+        $this->valor_asegurado = $valor_asegurado;
+    }
+
+    /**
+     * @param float
+     */
+    public function setTasa(float $tasa)
+    {
+        $this->tasa = $tasa;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrimaNetaSinValoresExtra()
+    {
+        return $this->prima_neta_sin_valores_extra;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrimaRiesgo()
+    {
+        return $this->prima_riesgo;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDerechosEmision()
+    {
+        return $this->derechos_emision;
+    }
+
+    /**
+     * @param float $derechos_emision
+     */
+    public function setDerechosEmision($derechos_emision)
+    {
+        $this->derechos_emision = $derechos_emision;
+    }
 
     public function agregarCoberturas(int $id, object $valor) {
         $coberturas = $this->coberturas;
@@ -452,6 +411,9 @@ class Cotizador extends CotizadorInverso
         }
     }
 
+    /**
+     * Realiza todos los cálculos pera generar el cotizador con prima diaria
+     */
     public function cotizarPrimaDiaria(int $dias) {
         $this->calcularValorAseguradoValoresExtras();
         $this->calcularPrimaNeta();
