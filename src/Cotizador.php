@@ -475,8 +475,6 @@ class Cotizador extends CotizadorInverso
         $this->ejecutarFormulas();
         $this->calcularPrimaNetaValoresExtras();
 
-
-
         $this->calcularImpuestosPrimaNeta();
         $this->calcularBaseImponible();
         $this->calcularImpuestos();
