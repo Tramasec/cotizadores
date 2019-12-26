@@ -207,6 +207,15 @@ class Cotizador extends CotizadorInverso
     }
 
     /**
+     * @return float
+     */
+    public function getValorAsegurado()
+    {
+        return $this->valor_asegurado;
+    }
+
+
+    /**
      * @param float $valor_asegurado
      */
     public function setValorAsegurado(float $valor_asegurado)
