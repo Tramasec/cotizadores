@@ -252,6 +252,7 @@ class CasoUnoTest extends TestCase
         $cobertura4->nombre = 'responsabilidad civil';
         $cobertura4->maximo_asegurado = 2000;
         $cobertura4->porcentaje = 0.0666666666666667;
+
         $a->agregarCoberturas(4, $cobertura4);
         $a->agregarImpuesto(12, 12.0);
         $a->agregarImpuestoPrimaNeta(35, 3.5);
@@ -259,6 +260,15 @@ class CasoUnoTest extends TestCase
         $a->setPrimaTotal(19.983);
         $a->setValorAsegurado(15000);
         $a->setDerechosEmision(1.05);
+
+
+        $a->setFormulas([
+            'prima_neta = 16.1461195054945'
+        ]);
+
+        $a->ejecutarFormulas();
+
+
         $a->cotizadorInverso();
         $a->cotizar();
 

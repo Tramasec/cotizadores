@@ -8,6 +8,24 @@ use Carbon\Carbon;
 
 class Periodo
 {
+    protected $pagos = [];
+
+    /**
+     * @return array
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * @param array $pagos
+     */
+    public function setPagos($pagos)
+    {
+        $this->pagos = $pagos;
+    }
+
     /**
      * @var \Carbon\Carbon
      */

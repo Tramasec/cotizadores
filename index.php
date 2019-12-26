@@ -4,6 +4,14 @@
 require_once ('./vendor/autoload.php');
 
 
+
+$contrato = new \Cotizador\Contrato();
+
+
+$contrato->cotizarMasivo();
+
+die;
+
 $a = new \Cotizador\Cotizador();
 $date = \Carbon\Carbon::now();
 $date2 = \Carbon\Carbon::now()->addMonth();
