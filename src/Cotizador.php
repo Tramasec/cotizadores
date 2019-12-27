@@ -96,6 +96,22 @@ class Cotizador extends CotizadorInverso
     protected $impuestosCalculadosPrimaNeta = [];
 
     /**
+     * @return array
+     */
+    public function getImpuestosCalculados()
+    {
+        return $this->impuestosCalculados;
+    }
+
+    /**
+     * @return array
+     */
+    public function getImpuestosCalculadosPrimaNeta()
+    {
+        return $this->impuestosCalculadosPrimaNeta;
+    }
+
+    /**
      * @var array
      * Valores de extras para agregar a la prima neta ej ['lucro cesante', 12.0]
      */
