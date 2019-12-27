@@ -224,6 +224,15 @@ class Cotizador extends CotizadorInverso
     }
 
     /**
+     * @return float
+     */
+    public function getTasa()
+    {
+        return $this->tasa;
+    }
+
+
+    /**
      * @param float
      */
     public function setTasa(float $tasa)

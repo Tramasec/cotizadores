@@ -1,10 +1,13 @@
 <?php
 namespace Cotizador;
 
+use Carbon\Carbon;
+
 class Contrato
 {
     protected $cotizadores = [];
     protected $pagos = [];
+    protected $endosos = [];
 
     /**
      * @var Producto
@@ -36,7 +39,15 @@ class Contrato
     }
 
     private function crearPago() {
-        $pago = new Pago('', $this->periodos[0]->primaTotal);
+        $pago = new Pago('', $this->periodos[0]->getPrimaTotal());
+
+        $periodo = $this->periodos[0];
+
+        $periodo->setPagos([$pago]);
+    }
+
+    private function crearEndoso() {
+        $pago = new Pago('', $this->periodos[0]->getPrimaTotal());
 
         $periodo = $this->periodos[0];
 
@@ -57,9 +68,9 @@ class Contrato
 
         $periodo = $this->periodos[0];
 
-        $periodo->primaTotal = $primaTotal;
-        $periodo->primaNeta = $primaNeta;
-        $periodo->valorAsegurado = $valorAsegurado;
+        $periodo->setPrimaTotal($primaTotal);
+        $periodo->setPrimaNeta($primaNeta);
+        $periodo->setValorAsegurado($valorAsegurado);
 
         $this->periodos = [$periodo];
 
@@ -75,6 +86,7 @@ class Contrato
         $this->cargarConfiguraciones();
 
         $cotizadores = [];
+        $endosos = [];
 
         //Iterar Cotitzadores
         foreach ($this->producto->cotizadores as $ct) {
@@ -96,9 +108,20 @@ class Contrato
             $cotizador->cotizar();
 
             $cotizadores[] = $cotizador;
+
+            $endoso = new Endoso(Carbon::now(), Carbon::now()->addMonth(), 0,
+                $cotizador->getValorAsegurado(), $cotizador->getTasa(), $cotizador->getPrimaNeta(),
+                $cotizador->getPrimaTotal(), 'pendiente', null, null);
+
+            $endosos[] = $endoso;
         }
 
 
         $this->cotizadores = $cotizadores;
+        $this->endosos = $endosos;
+        $periodo = $this->periodos[0];
+
+        $periodo->setEndosos($endosos);
+        $periodo->setCotizadores($cotizadores);
     }
 }

@@ -9,22 +9,8 @@ use Carbon\Carbon;
 class Periodo
 {
     protected $pagos = [];
-
-    /**
-     * @return array
-     */
-    public function getPagos()
-    {
-        return $this->pagos;
-    }
-
-    /**
-     * @param array $pagos
-     */
-    public function setPagos($pagos)
-    {
-        $this->pagos = $pagos;
-    }
+    protected $endosos = [];
+    protected $cotizadores = [];
 
     /**
      * @var \Carbon\Carbon
@@ -171,6 +157,54 @@ class Periodo
     public function setPrimaTotal(float $prima_total)
     {
         $this->prima_total = $prima_total;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEndosos()
+    {
+        return $this->endosos;
+    }
+
+    /**
+     * @param array $endosos
+     */
+    public function setEndosos($endosos)
+    {
+        $this->endosos = $endosos;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPagos()
+    {
+        return $this->pagos;
+    }
+
+    /**
+     * @param array $pagos
+     */
+    public function setPagos($pagos)
+    {
+        $this->pagos = $pagos;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCotizadores()
+    {
+        return $this->cotizadores;
+    }
+
+    /**
+     * @param array $cotizadores
+     */
+    public function setCotizadores($cotizadores)
+    {
+        $this->cotizadores = $cotizadores;
     }
 
 }
