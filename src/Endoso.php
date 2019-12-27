@@ -80,6 +80,34 @@ class Endoso
     protected $periodo_id;
 
     /**
+     * Endoso constructor.
+     * @param Carbon $fecha_inicio
+     * @param Carbon $fecha_fin
+     * @param int $numero_endoso
+     * @param float $valor_asegurado
+     * @param float $tasa
+     * @param float $prima_neta
+     * @param float $prima_total
+     * @param string $estado_emision
+     * @param int $numero_poliza
+     * @param string $numero_factura
+     */
+    public function __construct(Carbon $fecha_inicio, Carbon $fecha_fin, $numero_endoso, $valor_asegurado, $tasa, $prima_neta, $prima_total, $estado_emision, $numero_poliza, $numero_factura)
+    {
+        $this->fecha_inicio = $fecha_inicio;
+        $this->fecha_fin = $fecha_fin;
+        $this->numero_endoso = $numero_endoso;
+        $this->valor_asegurado = $valor_asegurado;
+        $this->tasa = $tasa;
+        $this->prima_neta = $prima_neta;
+        $this->prima_total = $prima_total;
+        $this->estado_emision = $estado_emision;
+        $this->numero_poliza = $numero_poliza;
+        $this->numero_factura = $numero_factura;
+    }
+
+
+    /**
      * @return \Carbon\Carbon
      */
     public function getFechaInicio()
