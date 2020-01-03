@@ -10,8 +10,7 @@
     ],
     "require": {
         "tramasec/eval-math": "^2.6",
-        "nesbot/carbon": "^2.28",
-        "phpunit/phpunit": "^8.5"
+        "nesbot/carbon": "^2.28"
     },
     "autoload": {
       "psr-4": {
@@ -25,6 +24,7 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^5.0",
+        "phpunit/phpunit": "^8.5",
         "phpunit/php-code-coverage": "^7.0"
     }
 }
